@@ -8,11 +8,15 @@
 </head>
 <body>
     <h1>Explore the weather in Arctic Dreams by Barry Lopez</h1>
-    <input type="month" 
-       id="monthSelector" 
-       min="1980-01" 
-       max="1986-12"
-       required>
+    <select id="yearSelector">
+        <option value="1980">1980</option>
+        <option value="1981">1981</option>
+        <option value="1982">1982</option>
+        <option value="1983">1983</option>
+        <option value="1984">1984</option>
+        <option value="1985">1985</option>
+        <option value="1986">1986</option>
+    </select>
     <canvas id="davisWeatherChart"></canvas>
     <canvas id="beringWeatherChart"></canvas>
     <script src="script.js"></script>

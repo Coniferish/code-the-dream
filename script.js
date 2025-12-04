@@ -1,22 +1,21 @@
 const archiveUrl = "https://archive-api.open-meteo.com/v1/archive";
-const davisStrait = "64.093781, -56.660923"
-const beringStrait = "66.008666, -168.629891"
+const davisCoordinates = "64.093781, -56.660923"
+const beringCoordinates = "66.008666, -168.629891"
 
-const monthInput = document.getElementById('monthSelector');
+const yearInput = document.getElementById('yearSelector');
 const today = new Date();
 const month = String(today.getMonth() + 1).padStart(2, '0');
-monthInput.value = `1980-${month}`;
+yearInput.value = '1980';
 
-let davisChart = null;
-let beringChart = null;
+let archiveDavisChart = null;
+let archiveBeringChart = null;
 
-async function fetchWeatherData(selectedDate, latLong, canvasId, chartInstance) {
-    const [year, month] = selectedDate.split('-')
+async function fetchArchiveData(selectedYear, latLong, canvasId, chartInstance) {
     const [lat, long] = latLong.split(', ')
 
-    const startDate = `${year}-${month}-01`;
-    const lastDay = new Date(year, month, 0).getDate();
-    const endDate = `${year}-${month}-${lastDay}`;
+    const startDate = `${selectedYear}-${month}-01`;
+    const lastDay = new Date(selectedYear, month, 0).getDate();
+    const endDate = `${selectedYear}-${month}-${lastDay}`;
 
     const url = `https://archive-api.open-meteo.com/v1/archive?latitude=${lat}&longitude=${long}&start_date=${startDate}&end_date=${endDate}&hourly=temperature_2m,weather_code,cloud_cover,visibility,wind_speed_10m,rain,showers,snowfall&temporal_resolution=hourly_3`;
 
@@ -80,15 +79,15 @@ async function fetchWeatherData(selectedDate, latLong, canvasId, chartInstance) 
 }
 
 async function updateBothCharts(selectedDate) {
-    davisChart = await fetchWeatherData(selectedDate, davisStrait, 'davisWeatherChart', davisChart);
-    beringChart = await fetchWeatherData(selectedDate, beringStrait, 'beringWeatherChart', beringChart);
+    archiveDavisChart = await fetchArchiveData(selectedDate, davisCoordinates, 'davisWeatherChart', archiveDavisChart);
+    archiveBeringChart = await fetchArchiveData(selectedDate, beringCoordinates, 'beringWeatherChart', archiveBeringChart);
 }
 
-monthInput.addEventListener('change', (event) => {
+yearInput.addEventListener('change', (event) => {
     const selectedDate = event.target.value;
     updateBothCharts(selectedDate);
 });
 
-updateBothCharts(monthInput.value);
+updateBothCharts(yearInput.value);
 
 
