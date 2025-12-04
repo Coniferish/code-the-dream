@@ -29,8 +29,8 @@ async function fetchWeatherData(selectedYear, latLong, canvasId, chartInstance) 
     const startDate = `${selectedYear}-${startMonth}-${startDay}`;
     const endDate = `${selectedYear}-${endMonth}-${endDay}`;
 
-    const archiveUrl = `https://archive-api.open-meteo.com/v1/archive?latitude=${lat}&longitude=${long}&start_date=${startDate}&end_date=${endDate}&hourly=temperature_2m,weather_code,cloud_cover,visibility,wind_speed_10m,rain,showers,snowfall&temporal_resolution=hourly_3`;
-    const forecastUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${long}&hourly=temperature_2m,weather_code,cloud_cover,visibility,wind_speed_10m,rain,showers,snowfall&forecast_days=16&past_days=92&temporal_resolution=hourly_3`
+    const archiveUrl = `https://archive-api.open-meteo.com/v1/archive?latitude=${lat}&longitude=${long}&start_date=${startDate}&end_date=${endDate}&hourly=temperature_2m&temporal_resolution=hourly_3`;
+    const forecastUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${long}&hourly=temperature_2m&forecast_days=16&past_days=92&temporal_resolution=hourly_3`
 
     try {
         const archiveResponse = await fetch(archiveUrl);
@@ -50,32 +50,36 @@ async function fetchWeatherData(selectedYear, latLong, canvasId, chartInstance) 
             data: {
                 labels: archiveData.hourly.time,
                 datasets: [{
-                    label: 'Archive Temperature (°C)',
+                    label: `${selectedYear} Temperature`,
                     data: archiveData.hourly.temperature_2m,
-                    borderColor: 'rgb(75, 192, 192)',
+                    borderColor: 'rgba(101, 183, 255, 1)',
                     tension: 0.1
                 },
                 {
-                    label: 'Forecast Temperature (°C)',
+                    label: `${today.getFullYear()} Temperature`,
                     data: forecastData.hourly.temperature_2m,
-                    borderColor: 'rgb(255, 99, 132)',
+                    borderColor: 'rgba(255, 134, 200, 1)',
                     tension: 0.1
                 }]
             },
             options: {
                 responsive: true,
-                plugins: {
-                    title: {
-                        display: true,
-                        text: `Temperature Trends`
-                    }
-                },
                 scales: {
                     x: {
                         display: true,
                         title: {
                             display: true,
                             text: 'Date'
+                        },
+                        ticks: {
+                            callback: function(value) {
+                                const date = new Date(this.getLabelForValue(value));
+                                const month = String(date.getMonth() + 1).padStart(2, '0');
+                                const day = String(date.getDate()).padStart(2, '0');
+                                return `${month}/${day}`;
+                            },
+                            maxRotation: 45,
+                            minRotation: 45
                         }
                     },
                     y: {
