@@ -10,7 +10,7 @@ monthInput.value = `1980-${month}`;
 let davisChart = null;
 let beringChart = null;
 
-async function fetchWeatherData(selectedDate, latLong, canvasId, chartInstance, locationName) {
+async function fetchWeatherData(selectedDate, latLong, canvasId, chartInstance) {
     const [year, month] = selectedDate.split('-')
     const [lat, long] = latLong.split(', ')
 
@@ -29,10 +29,16 @@ async function fetchWeatherData(selectedDate, latLong, canvasId, chartInstance, 
         }
 
         const ctx = document.getElementById(canvasId).getContext('2d');
+
+        // Create labels array showing only 12:00 for each day
+        const displayLabels = data.hourly.time.map(time => {
+            return time.includes('T12:00') ? time : '';
+        });
+
         const newChart = new Chart(ctx, {
             type: 'line',
             data: {
-                labels: data.hourly.time,
+                labels: displayLabels,
                 datasets: [{
                     label: 'Temperature (°C)',
                     data: data.hourly.temperature_2m,
@@ -45,7 +51,7 @@ async function fetchWeatherData(selectedDate, latLong, canvasId, chartInstance, 
                 plugins: {
                     title: {
                         display: true,
-                        text: `Temperature Trends - ${locationName}`
+                        text: `Temperature Trends`
                     }
                 },
                 scales: {
@@ -74,8 +80,8 @@ async function fetchWeatherData(selectedDate, latLong, canvasId, chartInstance, 
 }
 
 async function updateBothCharts(selectedDate) {
-    davisChart = await fetchWeatherData(selectedDate, davisStrait, 'davisWeatherChart', davisChart, 'Davis Strait');
-    beringChart = await fetchWeatherData(selectedDate, beringStrait, 'beringWeatherChart', beringChart, 'Bering Strait');
+    davisChart = await fetchWeatherData(selectedDate, davisStrait, 'davisWeatherChart', davisChart);
+    beringChart = await fetchWeatherData(selectedDate, beringStrait, 'beringWeatherChart', beringChart);
 }
 
 monthInput.addEventListener('change', (event) => {
