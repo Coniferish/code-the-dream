@@ -8,7 +8,7 @@ const today = new Date();
 let startDate = new Date();
 startDate.setDate(startDate.getDate() - 92);
 let endDate = new Date();
-endDate.setDate(endDate.getDate() + 16);
+endDate.setDate(endDate.getDate() + 15);
 
 const startMonth = String(startDate.getMonth() + 1).padStart(2, '0');
 const endMonth = String(endDate.getMonth() + 1).padStart(2, '0');
@@ -45,19 +45,20 @@ async function fetchWeatherData(selectedYear, latLong, canvasId, chartInstance) 
 
         const ctx = document.getElementById(canvasId).getContext('2d');
 
-        // Create labels array showing only 12:00 for each day
-        const displayLabels = archiveData.hourly.time.map(time => {
-            return time.includes('T12:00') ? time : '';
-        });
-
         const newChart = new Chart(ctx, {
             type: 'line',
             data: {
                 labels: archiveData.hourly.time,
                 datasets: [{
-                    label: 'Temperature (°C)',
+                    label: 'Archive Temperature (°C)',
                     data: archiveData.hourly.temperature_2m,
                     borderColor: 'rgb(75, 192, 192)',
+                    tension: 0.1
+                },
+                {
+                    label: 'Forecast Temperature (°C)',
+                    data: forecastData.hourly.temperature_2m,
+                    borderColor: 'rgb(255, 99, 132)',
                     tension: 0.1
                 }]
             },
