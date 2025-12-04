@@ -8,14 +8,28 @@
 </head>
 <body>
     <nav>
+        <a href="index.html">Home</a>
         <a href="temp.html">Temperature</a>
-        <a href="wind.html">Wind</a>
     </nav>
     <h1>Explore the weather in Arctic Dreams by Barry Lopez</h1>
     <p>These charts are intended to provide more context for those reading Arctic Dreams. Published in 1986, Arctic Dreams
         describes four years of Barry Lopez's travels in the Alaskan and Canadian Arctic
-        where he worked as a biologist. These charts show the current temperatures for two regions, the Davis and Bering
+        where he worked as a biologist. These charts show the current wind speed for two regions, the Davis and Bering
         Strait alongside historical data during the years in which Barry Lopez was presumably in these areas writing his
         book.</p>
+    <select id="yearSelector">
+        <option value="1980">1980</option>
+        <option value="1981">1981</option>
+        <option value="1982">1982</option>
+        <option value="1983">1983</option>
+        <option value="1984">1984</option>
+        <option value="1985">1985</option>
+        <option value="1986">1986</option>
+    </select>
+    <h4>Davis Strait Wind Speed</h4>
+    <canvas id="davisWindChart"></canvas>
+    <h4>Bering Strait Wind Speed</h4>
+    <canvas id="beringWindChart"></canvas>
+    <script src="wind_script.js"></script>
 </body>
 </html>

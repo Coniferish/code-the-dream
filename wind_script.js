@@ -22,14 +22,14 @@ let archiveBeringChart = null;
 let forcastDavisChart = null;
 let forecastBeringChart = null;
 
-async function fetchTempData(selectedYear, latLong, canvasId, chartInstance) {
+async function fetchWindData(selectedYear, latLong, canvasId, chartInstance) {
     const [lat, long] = latLong.split(', ')
 
     const startDate = `${selectedYear}-${startMonth}-${startDay}`;
     const endDate = `${selectedYear}-${endMonth}-${endDay}`;
 
-    const archiveUrl = `https://archive-api.open-meteo.com/v1/archive?latitude=${lat}&longitude=${long}&start_date=${startDate}&end_date=${endDate}&hourly=temperature_2m&temporal_resolution=hourly_3`;
-    const forecastUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${long}&hourly=temperature_2m&forecast_days=16&past_days=92&temporal_resolution=hourly_3`
+    const archiveUrl = `https://archive-api.open-meteo.com/v1/archive?latitude=${lat}&longitude=${long}&start_date=${startDate}&end_date=${endDate}&hourly=wind_speed_10m&temporal_resolution=hourly_3`;
+    const forecastUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${long}&hourly=wind_speed_10m&forecast_days=16&past_days=92&temporal_resolution=hourly_3`
 
     try {
         const archiveResponse = await fetch(archiveUrl);
@@ -37,6 +37,7 @@ async function fetchTempData(selectedYear, latLong, canvasId, chartInstance) {
         
         const forecastResponse = await fetch(forecastUrl);
         const forecastData = await forecastResponse.json();
+        console.log(forecastData)
 
         if (chartInstance) {
             chartInstance.destroy();
@@ -49,14 +50,14 @@ async function fetchTempData(selectedYear, latLong, canvasId, chartInstance) {
             data: {
                 labels: archiveData.hourly.time,
                 datasets: [{
-                    label: `${selectedYear} Temperature`,
-                    data: archiveData.hourly.temperature_2m,
+                    label: `${selectedYear} Wind Speed`,
+                    data: archiveData.hourly.wind_speed_10m,
                     borderColor: 'rgba(101, 183, 255, 1)',
                     tension: 0.1
                 },
                 {
-                    label: `${today.getFullYear()} Temperature`,
-                    data: forecastData.hourly.temperature_2m,
+                    label: `${today.getFullYear()} Wind Speed`,
+                    data: forecastData.hourly.wind_speed_10m,
                     borderColor: 'rgba(255, 134, 200, 1)',
                     tension: 0.1
                 }]
@@ -85,7 +86,7 @@ async function fetchTempData(selectedYear, latLong, canvasId, chartInstance) {
                         display: true,
                         title: {
                             display: true,
-                            text: 'Temperature (°C)'
+                            text: 'Wind Speed (km/h)'
                         }
                     }
                 }
@@ -99,8 +100,8 @@ async function fetchTempData(selectedYear, latLong, canvasId, chartInstance) {
 }
 
 async function updateBothCharts(selectedDate) {
-    archiveDavisChart = await fetchTempData(selectedDate, davisCoordinates, 'davisTemperatureChart', archiveDavisChart);
-    archiveBeringChart = await fetchTempData(selectedDate, beringCoordinates, 'beringTemperatureChart', archiveBeringChart);
+    archiveDavisChart = await fetchWindData(selectedDate, davisCoordinates, 'davisWindChart', archiveDavisChart);
+    archiveBeringChart = await fetchWindData(selectedDate, beringCoordinates, 'beringWindChart', archiveBeringChart);
 }
 
 yearInput.addEventListener('change', (event) => {
