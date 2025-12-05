@@ -91,7 +91,6 @@ async function fetchTempData(selectedYear, latLong, canvasId, chartInstance) {
                 }
             }
         });
-        console.log(archiveData);
         return newChart;
     } catch (error) {
         console.error('Error fetching weather data: ', error)
